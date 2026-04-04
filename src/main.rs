@@ -1,3 +1,7 @@
+use leptos::mount::mount_to_body;
+
 fn main() {
-    println!("Hello, world!");
+    console_error_panic_hook::set_once();
+
+    mount_to_body(f5a_leptos::App);
 }
