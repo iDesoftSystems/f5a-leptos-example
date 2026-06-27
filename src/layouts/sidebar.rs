@@ -1,4 +1,5 @@
 use leptos::{attr::Attribute, prelude::*};
+use leptos_router::components::A;
 
 use crate::icons;
 
@@ -40,10 +41,10 @@ fn SidebarHeader(is_sidebar_open: RwSignal<bool>) -> impl IntoView {
 fn SidebarNav() -> impl IntoView {
     view! {
         <nav class="flex flex-col space-y-0.5 overflow-y-auto">
-            <NavItem label="Home">
+            <NavItem label="Home" href="/">
                 <icons::Home />
             </NavItem>
-            <NavItem label="Users">
+            <NavItem label="Users" href="/users">
                 <icons::Users />
             </NavItem>
         </nav>
@@ -51,14 +52,14 @@ fn SidebarNav() -> impl IntoView {
 }
 
 #[component]
-fn NavItem(children: Children, label: &'static str) -> impl IntoView {
+fn NavItem(children: Children, href: &'static str, label: &'static str) -> impl IntoView {
     view! {
-        <a class="flex items-center space-x-2 px-2 py-2 rounded-md hover:bg-slate-50 dark:hover:bg-slate-700">
+        <A href=href attr:class="flex items-center space-x-2 px-2 py-2 rounded-md hover:bg-slate-50 dark:hover:bg-slate-700">
             <div class="text-slate-400 dark:text-slate-500">
                 {children()}
             </div>
             <span class="text-sm text-slate-600 font-medium dark:text-slate-300">{label}</span>
-        </a>
+        </A>
     }
 }
 

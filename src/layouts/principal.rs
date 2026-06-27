@@ -1,5 +1,6 @@
 use leptos::prelude::*;
 use leptos_meta::Html;
+use leptos_router::components::Outlet;
 use leptos_use::{ColorMode, UseColorModeOptions, UseColorModeReturn, use_color_mode_with_options};
 
 use crate::layouts::{Navbar, Sidebar};
@@ -35,5 +36,14 @@ pub fn Principal(children: Children) -> impl IntoView {
             </div>
 
         </div>
+    }
+}
+
+#[component]
+pub fn ProtectedRoutes() -> impl IntoView {
+    view! {
+        <Principal>
+            <Outlet />
+        </Principal>
     }
 }
