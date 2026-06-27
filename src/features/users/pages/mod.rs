@@ -1,8 +1,5 @@
-use leptos::prelude::*;
+mod user_detail;
+mod user_list;
 
-#[component]
-pub fn UsersPage() -> impl IntoView {
-    view! {
-        <h1 class="text-2xl font-extrabold text-blue-950 dark:text-white">Users</h1>
-    }
-}
+pub use user_detail::UserDetailPage;
+pub use user_list::UsersPage;

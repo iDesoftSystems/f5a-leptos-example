@@ -13,7 +13,11 @@ pub fn App() -> impl IntoView {
 
                 <ParentRoute path=path!("/") view=layouts::ProtectedRoutes>
                     <Route path=path!("/") view=home::pages::HomePage />
-                    <Route path=path!("/users") view=users::pages::UsersPage />
+
+                    <ParentRoute path=path!("/users") view=Outlet>
+                        <Route path=path!("") view=users::pages::UsersPage />
+                        <Route path=path!(":user_id") view=users::pages::UserDetailPage />
+                    </ParentRoute>
                 </ParentRoute>
             </Routes>
         </Router>
