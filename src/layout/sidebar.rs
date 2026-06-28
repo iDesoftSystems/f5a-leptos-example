@@ -3,37 +3,52 @@ use leptos::{attr::Attribute, prelude::*};
 use crate::{icons, theme::clickable_icon_styles_attrs};
 
 #[component]
-pub fn Sidebar() -> impl IntoView {
+pub fn Sidebar(is_sidebar_open: RwSignal<bool>) -> impl IntoView {
     view! {
-        // <SidebarOverlay />
+        <SidebarOverlay is_sidebar_open=is_sidebar_open />
 
-        <aside {..aside_class_attrs()}>
-            <SidebarHeader />
+        <aside {..aside_class_attrs(is_sidebar_open)}>
+            <SidebarHeader is_sidebar_open=is_sidebar_open />
             <SidebarNav />
         </aside>
     }
 }
 
-fn aside_class_attrs() -> impl Attribute {
-    let base_class = "flex flex-col w-72 px-2 py-4 border-r bg-white border-blue-100 gap-y-4 z-50 dark:bg-slate-800 dark:border-slate-700";
-    let position_class = format!("fixed inset-y-0 left-0 lg:static {}", base_class);
-    let full_class = format!("{}", position_class);
+fn aside_class_attrs(is_sidebar_open: RwSignal<bool>) -> impl Attribute {
+    let layout_class = "flex flex-col w-72 px-2 py-4 border-r bg-white border-blue-100 gap-y-4 z-50 dark:bg-slate-800 dark:border-slate-700";
+    let position_class = format!(
+        "fixed inset-y-0 left-0 lg:static {} lg:translate-x-0",
+        layout_class
+    );
+    let full_class = format!(" {}", position_class);
 
     view! {
-        <{..} class=full_class />
+        <{..} class=move || {
+            if is_sidebar_open.get() {
+                format!("{} translate-x-0", full_class)
+            } else {
+                format!("{} -translate-x-full", full_class)
+            }
+        } />
     }
 }
 
 #[component]
-fn SidebarOverlay() -> impl IntoView {
+fn SidebarOverlay(is_sidebar_open: RwSignal<bool>) -> impl IntoView {
     view! {
-        <div class="fixed inset-0 backdrop-blur-sm z-40">
+        <div class=move || {
+            if is_sidebar_open.get() {
+                "fixed inset-0 backdrop-blur-sm z-40 lg:hidden"
+            } else {
+                "hidden"
+            }
+        }>
         </div>
     }
 }
 
 #[component]
-fn SidebarHeader() -> impl IntoView {
+fn SidebarHeader(is_sidebar_open: RwSignal<bool>) -> impl IntoView {
     view! {
         <div class="flex justify-between items-center">
             <div class="flex gap-1 items-center">
@@ -41,7 +56,10 @@ fn SidebarHeader() -> impl IntoView {
                 <span class="font-bold text-blue-950 text-base dark:text-white">F5A Leptos</span>
             </div>
 
-            <button {..clickable_icon_styles_attrs()}>
+            <button
+                on:click=move |_| is_sidebar_open.set(false)
+                {..clickable_icon_styles_attrs("lg:hidden")}
+                >
                 <icons::XMark />
             </button>
         </div>
