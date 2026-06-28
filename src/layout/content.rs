@@ -5,10 +5,10 @@ use crate::layout::Navbar;
 #[component]
 pub fn MainContent(children: Children) -> impl IntoView {
     view! {
-        <div class="flex flex-col">
+        <div class="flex-1 flex flex-col">
             <Navbar />
 
-            <main class="h-4 w-full">
+            <main class="h-screen w-full">
             {children()}
             </main>
         </div>

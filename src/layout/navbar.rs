@@ -1,6 +1,6 @@
-use leptos::{attr::Attribute, prelude::*};
+use leptos::prelude::*;
 
-use crate::icons;
+use crate::{icons, theme::clickable_icon_styles_attrs};
 
 #[component]
 pub fn Navbar() -> impl IntoView {
@@ -19,11 +19,5 @@ pub fn Navbar() -> impl IntoView {
                 </button>
             </div>
         </div>
-    }
-}
-
-fn clickable_icon_styles_attrs() -> impl Attribute {
-    view! {
-        <{..} class="rounded-md p-1 text-slate-400 hover:bg-slate-200" />
     }
 }
