@@ -1,4 +1,4 @@
-use leptos::prelude::*;
+use leptos::{attr::Attribute, prelude::*};
 
 use crate::{icons, theme::clickable_icon_styles_attrs};
 
@@ -7,10 +7,20 @@ pub fn Sidebar() -> impl IntoView {
     view! {
         <SidebarOverlay />
 
-        <aside class="flex flex-col w-72 px-2 py-4 border-r border-blue-100 gap-y-4 z-50">
+        <aside {..aside_class_attrs()}>
             <SidebarHeader />
             <SidebarNav />
         </aside>
+    }
+}
+
+fn aside_class_attrs() -> impl Attribute {
+    let base_class = "flex flex-col w-72 px-2 py-4 border-r bg-white border-blue-100 gap-y-4 z-50";
+    let position_class = format!("fixed inset-y-0 left-0 lg:static {}", base_class);
+    let full_class = format!("{}", position_class);
+
+    view! {
+        <{..} class=full_class />
     }
 }
 
