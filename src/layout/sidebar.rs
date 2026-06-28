@@ -5,10 +5,20 @@ use crate::{icons, theme::clickable_icon_styles_attrs};
 #[component]
 pub fn Sidebar() -> impl IntoView {
     view! {
-        <aside class="flex flex-col w-72 px-2 py-4 border-r border-blue-100 gap-y-4">
+        <SidebarOverlay />
+
+        <aside class="flex flex-col w-72 px-2 py-4 border-r border-blue-100 gap-y-4 z-50">
             <SidebarHeader />
             <SidebarNav />
         </aside>
+    }
+}
+
+#[component]
+fn SidebarOverlay() -> impl IntoView {
+    view! {
+        <div class="fixed inset-0 backdrop-blur-sm z-40">
+        </div>
     }
 }
 
