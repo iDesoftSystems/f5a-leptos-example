@@ -1,4 +1,5 @@
 use leptos::prelude::*;
+use leptos_router::components::Outlet;
 use leptos_use::ColorMode;
 
 use crate::layout::{Navbar, Sidebar};
@@ -24,5 +25,14 @@ pub fn Principal(
             </div>
         </div>
 
+    }
+}
+
+#[component]
+pub fn ProtectedRoutes(mode: Signal<ColorMode>, mode_tx: WriteSignal<ColorMode>) -> impl IntoView {
+    view! {
+        <Principal mode=mode mode_tx=mode_tx>
+            <Outlet />
+        </Principal>
     }
 }
