@@ -1,23 +1,18 @@
 use leptos::prelude::*;
 use leptos_router::components::Outlet;
-use leptos_use::ColorMode;
 
-use crate::layout::{Navbar, Sidebar};
+use crate::layout::{Navbar, Sidebar, SidebarContext};
 
 #[component]
-pub fn Principal(
-    children: Children,
-    mode: Signal<ColorMode>,
-    mode_tx: WriteSignal<ColorMode>,
-) -> impl IntoView {
-    let is_sidebar_open = RwSignal::new(true);
+pub fn Principal(children: Children) -> impl IntoView {
+    provide_context(SidebarContext(RwSignal::new(false)));
 
     view! {
         <div class="h-screen flex flex-row bg-gray-50 dark:bg-slate-900">
-            <Sidebar is_sidebar_open=is_sidebar_open />
+            <Sidebar />
 
             <div class="flex-1 flex flex-col">
-                <Navbar mode=mode mode_tx=mode_tx is_sidebar_open=is_sidebar_open />
+                <Navbar />
 
                 <main class="h-screen w-full p-4">
                 {children()}
@@ -29,9 +24,9 @@ pub fn Principal(
 }
 
 #[component]
-pub fn ProtectedRoutes(mode: Signal<ColorMode>, mode_tx: WriteSignal<ColorMode>) -> impl IntoView {
+pub fn ProtectedRoutes() -> impl IntoView {
     view! {
-        <Principal mode=mode mode_tx=mode_tx>
+        <Principal>
             <Outlet />
         </Principal>
     }

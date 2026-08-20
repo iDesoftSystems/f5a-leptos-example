@@ -1,14 +1,14 @@
 use leptos::prelude::*;
 use leptos_use::ColorMode;
 
+use crate::layout::SidebarContext;
+use crate::state::ThemeContext;
 use crate::{icons, theme::clickable_icon_styles_attrs};
 
 #[component]
-pub fn Navbar(
-    is_sidebar_open: RwSignal<bool>,
-    mode: Signal<ColorMode>,
-    mode_tx: WriteSignal<ColorMode>,
-) -> impl IntoView {
+pub fn Navbar() -> impl IntoView {
+    let SidebarContext(is_sidebar_open) = expect_context::<SidebarContext>();
+
     view! {
         <div class="w-full flex flex-row justify-between px-4 py-4 border-b border-blue-100 bg-white dark:bg-slate-800 dark:border-slate-700">
             <div class="flex">
@@ -21,14 +21,16 @@ pub fn Navbar(
             </div>
 
             <div class="flex">
-                <ToggleTheme mode=mode mode_tx=mode_tx />
+                <ToggleTheme />
             </div>
         </div>
     }
 }
 
 #[component]
-fn ToggleTheme(mode: Signal<ColorMode>, mode_tx: WriteSignal<ColorMode>) -> impl IntoView {
+fn ToggleTheme() -> impl IntoView {
+    let ThemeContext { mode, mode_tx } = expect_context::<ThemeContext>();
+
     let on_toggle_theme = move |_| {
         let next = match mode.get() {
             ColorMode::Light => ColorMode::Dark,

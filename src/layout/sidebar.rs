@@ -1,21 +1,24 @@
 use leptos::{attr::Attribute, prelude::*};
 use leptos_router::components::A;
 
+use crate::layout::SidebarContext;
 use crate::{icons, theme::clickable_icon_styles_attrs};
 
 #[component]
-pub fn Sidebar(is_sidebar_open: RwSignal<bool>) -> impl IntoView {
+pub fn Sidebar() -> impl IntoView {
     view! {
-        <SidebarOverlay is_sidebar_open=is_sidebar_open />
+        <SidebarOverlay/>
 
-        <aside {..aside_class_attrs(is_sidebar_open)}>
-            <SidebarHeader is_sidebar_open=is_sidebar_open />
+        <aside {..aside_class_attrs()}>
+            <SidebarHeader />
             <SidebarNav />
         </aside>
     }
 }
 
-fn aside_class_attrs(is_sidebar_open: RwSignal<bool>) -> impl Attribute {
+fn aside_class_attrs() -> impl Attribute {
+    let SidebarContext(is_sidebar_open) = expect_context::<SidebarContext>();
+
     let layout_class = "flex flex-col w-72 px-2 py-4 border-r bg-white border-blue-100 gap-y-4 z-50 dark:bg-slate-800 dark:border-slate-700";
     let position_class = format!(
         "fixed inset-y-0 left-0 lg:static {} lg:translate-x-0",
@@ -35,7 +38,9 @@ fn aside_class_attrs(is_sidebar_open: RwSignal<bool>) -> impl Attribute {
 }
 
 #[component]
-fn SidebarOverlay(is_sidebar_open: RwSignal<bool>) -> impl IntoView {
+fn SidebarOverlay() -> impl IntoView {
+    let SidebarContext(is_sidebar_open) = expect_context::<SidebarContext>();
+
     view! {
         <div class=move || {
             if is_sidebar_open.get() {
@@ -49,7 +54,9 @@ fn SidebarOverlay(is_sidebar_open: RwSignal<bool>) -> impl IntoView {
 }
 
 #[component]
-fn SidebarHeader(is_sidebar_open: RwSignal<bool>) -> impl IntoView {
+fn SidebarHeader() -> impl IntoView {
+    let SidebarContext(is_sidebar_open) = expect_context::<SidebarContext>();
+
     view! {
         <div class="flex justify-between items-center">
             <div class="flex gap-1 items-center">
@@ -80,7 +87,7 @@ fn SidebarNav() -> impl IntoView {
 #[component]
 fn NavItem(label: &'static str, href: &'static str, #[prop(into)] icon: ViewFn) -> impl IntoView {
     view! {
-        <A href=href attr:class="flex flex-row items-center gap-x-2 py-2 px-0.5 hover:bg-slate-200  dark:hover:bg-slate-700 rounded-md">
+        <A attr:aria-current href=href attr:class="flex flex-row items-center gap-x-2 py-2 px-0.5 hover:bg-slate-200  dark:hover:bg-slate-700 rounded-md aria-[current=page]:bg-slate-700">
             <div class="text-slate-400">
                 {icon.run()}
             </div>
