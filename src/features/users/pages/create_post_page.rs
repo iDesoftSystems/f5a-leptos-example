@@ -1,13 +1,12 @@
 use crate::features::users::components::FileListPreview;
-use crate::features::users::models::FileItem;
+use crate::features::users::hooks::use_file_change;
 use leptos::logging::log;
 use leptos::prelude::*;
 use leptos::wasm_bindgen::JsCast;
-use uuid::Uuid;
 
 #[component]
 pub fn CreatePostPage() -> impl IntoView {
-    let (files, files_tx) = signal::<Vec<FileItem>>(Vec::new());
+    let (files, on_file_change) = use_file_change();
 
     let on_submit = move |ev: web_sys::SubmitEvent| {
         ev.prevent_default();
@@ -26,23 +25,6 @@ pub fn CreatePostPage() -> impl IntoView {
             .filter_map(|item| item.dyn_into::<web_sys::File>().ok())
             .collect::<Vec<web_sys::File>>();
         log!("post with message: {} and files: {:?}", message, files);
-    };
-
-    let on_file_change = move |ev: web_sys::Event| {
-        let target = event_target::<web_sys::HtmlInputElement>(&ev);
-
-        if let Some(files) = target.files() {
-            let file_items = (0..files.length())
-                .filter_map(|it| files.get(it))
-                .map(|file| FileItem {
-                    id: Uuid::new_v4(),
-                    name: file.name(),
-                    size: file.size(),
-                })
-                .collect::<Vec<FileItem>>();
-
-            files_tx.set(file_items);
-        }
     };
 
     view! {
