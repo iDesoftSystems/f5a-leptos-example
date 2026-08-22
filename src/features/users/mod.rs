@@ -1,2 +1,3 @@
+mod components;
 pub mod models;
 pub mod pages;

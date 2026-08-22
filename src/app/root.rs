@@ -38,6 +38,7 @@ pub fn App() -> impl IntoView {
                         <Route path=path!("") view=users::pages::UserListPage />
                         <Route path=path!("/create") view=users::pages::UserCreatePage />
                         <Route path=path!("/:user_id") view=users::pages::UserDetailPage />
+                        <Route path=path!("/:user_id/posts/create") view=users::pages::CreatePostPage />
                     </ParentRoute>
                 </ParentRoute>
             </Routes>

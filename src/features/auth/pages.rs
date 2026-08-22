@@ -1,3 +1,3 @@
-mod login;
+mod login_page;
 
-pub use login::LoginPage;
+pub use login_page::LoginPage;

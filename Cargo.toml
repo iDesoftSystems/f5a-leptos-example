@@ -9,4 +9,5 @@ leptos_meta = { version = "0.8" }
 leptos-use = { version = "0.19.0", features = ["use_color_mode"] }
 leptos_router = { version = "0.8.12" }
 console_error_panic_hook = "0.1.7"
-web-sys = { version = "0.3.104", features = ["default"] }
+web-sys = { version = "0.3.104", features = ["default", "File"] }
+uuid = { version = "1.25.0", features = ["v4", "js"] }
