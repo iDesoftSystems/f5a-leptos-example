@@ -87,7 +87,7 @@ fn SidebarNav() -> impl IntoView {
 #[component]
 fn NavItem(label: &'static str, href: &'static str, #[prop(into)] icon: ViewFn) -> impl IntoView {
     view! {
-        <A attr:aria-current href=href attr:class="flex flex-row items-center gap-x-2 py-2 px-0.5 hover:bg-slate-200  dark:hover:bg-slate-700 rounded-md aria-[current=page]:bg-slate-700">
+        <A attr:aria-current href=href attr:class="flex flex-row items-center gap-x-2 py-2 px-0.5 hover:bg-slate-200  dark:hover:bg-slate-700 rounded-md">
             <div class="text-slate-400">
                 {icon.run()}
             </div>
