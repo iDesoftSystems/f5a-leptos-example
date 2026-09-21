@@ -1,5 +1,4 @@
-use crate::features::users::components::FileItemPreview;
-use crate::features::users::models::FileItem;
+use crate::{core::forms::FileItem, features::users::components::FileItemPreview};
 use leptos::prelude::*;
 
 #[component]

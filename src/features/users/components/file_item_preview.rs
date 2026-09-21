@@ -1,5 +1,6 @@
-use crate::features::users::models::FileItem;
 use leptos::prelude::*;
+
+use crate::core::forms::FileItem;
 
 #[component]
 pub fn FileItemPreview(file: FileItem) -> impl IntoView {

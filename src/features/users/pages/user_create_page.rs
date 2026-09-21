@@ -1,77 +1,65 @@
 use leptos::logging::log;
 use leptos::prelude::*;
 
-fn first_file_from(input: NodeRef<leptos::html::Input>) -> Option<web_sys::File> {
-    input.get()?.files()?.get(0)
-}
+use crate::core::forms::{FileItem, ShowRule, collect_file_items, required, use_form_field};
 
 #[component]
 pub fn UserCreatePage() -> impl IntoView {
-    let file_ref = NodeRef::<leptos::html::Input>::new();
+    let submitted = RwSignal::new(false);
 
-    let username = RwSignal::new(String::new());
-    let gender = RwSignal::new(String::new());
-    let terms_of_service = RwSignal::new(false);
-    let has_file = RwSignal::new(false);
+    let username = use_form_field(
+        String::new(),
+        required("Username is required"),
+        submitted,
+        ShowRule::TouchedOrSubmitted,
+    );
+    let gender = use_form_field(
+        String::new(),
+        required("Gender is required"),
+        submitted,
+        ShowRule::TouchedOrSubmitted,
+    );
+    let terms = use_form_field(
+        false,
+        required("You must accept the terms of service"),
+        submitted,
+        ShowRule::TouchedOrSubmitted,
+    );
+    let avatar = use_form_field(
+        Vec::<FileItem>::new(),
+        required("At least one file is required"),
+        submitted,
+        ShowRule::TouchedOrSubmitted,
+    );
 
-    let on_file_change = move |_| {
-        has_file.set(first_file_from(file_ref).is_some());
+    let on_avatar_change = move |ev: web_sys::Event| {
+        avatar.value.set(collect_file_items(&ev));
+        avatar.touched.set(true);
     };
 
-    let username_error = move || {
-        let value = username.get();
-        if value.trim().is_empty() {
-            return Some("Username is required");
-        }
-
-        None
-    };
-
-    let gender_error = move || {
-        let value = gender.get();
-
-        if value.trim().is_empty() {
-            return Some("Gender is required");
-        }
-
-        None
-    };
-
-    let terms_error = move || {
-        let value = terms_of_service.get();
-        if !value {
-            return Some("You must accept the terms of service");
-        }
-
-        None
-    };
-
-    let file_error = move || {
-        if !has_file.get() {
-            return Some("At least one file is required");
-        }
-
-        None
-    };
-
-    let has_errors = Memo::new(move |_| {
-        username_error().is_some()
-            || gender_error().is_some()
-            || terms_error().is_some()
-            || file_error().is_some()
+    let valid = Memo::new(move |_| {
+        username.error.get().is_none()
+            && gender.error.get().is_none()
+            && terms.error.get().is_none()
+            && avatar.error.get().is_none()
     });
 
     let on_submit = move |ev: web_sys::SubmitEvent| {
         ev.prevent_default();
+        submitted.set(true);
 
-        let username = username.get();
-        let gender = gender.get();
-        let terms_of_service = terms_of_service.get();
+        if !valid.get() {
+            return;
+        }
 
-        if let Some(file) = first_file_from(file_ref) {
-            log!("file name: {}", file.name());
-            log!("file size: {}", file.size());
-            log!("file type: {}", file.type_());
+        let username = username.value.get();
+        let gender = gender.value.get();
+        let terms_of_service = terms.value.get();
+
+        if let Some(file) = avatar.value.get().first() {
+            log!("file name: {}", file.name);
+            log!("file size: {}", file.size);
+            log!("file type: {}", file.type_);
         }
 
         log!("username: {}", username);
@@ -91,13 +79,14 @@ pub fn UserCreatePage() -> impl IntoView {
                         <label class="text-blue-950 dark:text-slate-300" for="username">Username</label>
                         <input
                             id="username"
-                            bind:value=username
+                            bind:value=username.value
+                            on:blur=move |ev| username.mark_touched.run(ev)
                             autocomplete="username"
                             class="py-2 px-1.5 rounded-md border bg-white border-blue-100 text-blue-950 dark:text-slate-300 dark:border-slate-700 dark:bg-slate-700"
                             type="text" />
-                        <Show when=move || username_error().is_some()>
+                        <Show when=move || username.show_error.get()>
                             <p class="text-sm text-red-600">
-                            {move || username_error().unwrap_or_default()}
+                            {move || username.error.get().unwrap_or_default()}
                             </p>
                         </Show>
                     </div>
@@ -107,15 +96,16 @@ pub fn UserCreatePage() -> impl IntoView {
                         <select
                             id="gender"
                             class="appearance-none rounded-md border border-blue-100 bg-white text-blue-950 py-2 px-1.5 dark:text-slate-300 dark:border-slate-700 dark:bg-slate-700"
-                            bind:value=gender>
+                            on:blur=move |ev| gender.mark_touched.run(ev)
+                            bind:value=gender.value>
                             <option value="" disabled selected>Select gender</option>
                             <option value="F">Female</option>
                             <option value="M">Male</option>
                             <option value="O">Other</option>
                         </select>
-                        <Show when=move || gender_error().is_some()>
+                        <Show when=move || gender.show_error.get()>
                             <p class="text-sm text-red-600">
-                            {move || gender_error().unwrap_or_default()}
+                            {move || gender.error.get().unwrap_or_default()}
                             </p>
                         </Show>
                     </div>
@@ -123,8 +113,7 @@ pub fn UserCreatePage() -> impl IntoView {
 
                 <div class="flex flex-col gap-y-2">
                     <input
-                        node_ref=file_ref
-                        on:change=on_file_change
+                        on:change=on_avatar_change
                         id="avatar"
                         class="block w-full text-sm text-slate-500
                             file:mr-4 file:py-2 file:px-4
@@ -135,9 +124,9 @@ pub fn UserCreatePage() -> impl IntoView {
                             cursor-pointer border border-blue-100 rounded-md
                             dark:border-slate-700 dark:file:bg-slate-50 dark:file:text-slate-700"
                         type="file" />
-                    <Show when=move || file_error().is_some()>
+                    <Show when=move || avatar.show_error.get()>
                         <p class="text-sm text-red-600">
-                        {move || file_error().unwrap_or_default()}
+                        {move || avatar.error.get().unwrap_or_default()}
                         </p>
                     </Show>
                 </div>
@@ -147,22 +136,23 @@ pub fn UserCreatePage() -> impl IntoView {
                         <div class="flex flex-row gap-x-2">
                             <input
                                 id="terms-of-service"
-                                bind:checked=terms_of_service
+                                bind:checked=terms.value
+                                on:blur=move |ev| terms.mark_touched.run(ev)
                                 class="py-2 px-1.5 rounded-md border bg-white border-blue-100 text-blue-950 dark:text-slate-300 dark:border-slate-700 dark:bg-slate-700"
                                 type="checkbox" />
                             <label class="text-blue-950 dark:text-slate-300" for="terms-of-service">I agree to the terms of service</label>
                         </div>
                     </div>
-                    <Show when=move || terms_error().is_some()>
+                    <Show when=move || terms.show_error.get()>
                         <p class="text-sm text-red-600">
-                        {move || terms_error().unwrap_or_default()}
+                        {move || terms.error.get().unwrap_or_default()}
                         </p>
                     </Show>
                 </div>
 
                 <button
                     type="submit"
-                    disabled=move || has_errors.get()
+                    disabled=move || !valid.get()
                     class="bg-blue-950 text-white px-2 py-1.5 rounded-md hover:bg-blue-800 disabled:bg-slate-400 disabled:cursor-not-allowed">
                     Save
                 </button>
