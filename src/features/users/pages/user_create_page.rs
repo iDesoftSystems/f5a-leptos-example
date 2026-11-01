@@ -153,7 +153,7 @@ pub fn UserCreatePage() -> impl IntoView {
                 <button
                     type="submit"
                     disabled=move || !valid.get()
-                    class="bg-blue-950 text-white px-2 py-1.5 rounded-md hover:bg-blue-800 disabled:bg-slate-400 disabled:cursor-not-allowed">
+                    class="bg-blue-950 text-white px-2 py-1.5 cursor-pointer rounded-md hover:bg-blue-800 disabled:bg-slate-400 disabled:cursor-not-allowed">
                     Save
                 </button>
             </form>

@@ -44,7 +44,7 @@ fn SidebarOverlay() -> impl IntoView {
     view! {
         <div class=move || {
             if is_sidebar_open.get() {
-                "fixed inset-0 backdrop-blur-sm z-40 lg:hidden"
+                "fixed inset-0 backdrop-blur-xs z-40 lg:hidden"
             } else {
                 "hidden"
             }

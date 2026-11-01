@@ -92,12 +92,12 @@ pub fn UserListPage() -> impl IntoView {
             <h1 class="text-2xl font-extrabold text-blue-950 dark:text-white">Users</h1>
             <button
                 on:click=on_go_to_create
-                class="bg-blue-950 text-white px-2 py-1.5 rounded-md hover:bg-blue-800">
+                class="bg-blue-950 text-white px-2 py-1.5 rounded-md cursor-pointer hover:bg-blue-800">
                 Create user
             </button>
             <button
                 on:click=on_go_to_filtered_users
-                class="bg-blue-950 text-white px-2 py-1.5 rounded-md hover:bg-blue-800">
+                class="bg-blue-950 text-white px-2 py-1.5 rounded-md cursor-pointer hover:bg-blue-800">
                 Filtered
             </button>
         </div>
