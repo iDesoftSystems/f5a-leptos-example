@@ -56,7 +56,7 @@ pub fn CreatePostPage() -> impl IntoView {
 
             <button
                 type="submit"
-                class="bg-blue-950 text-white px-2 py-1.5 rounded-md hover:bg-blue-800">
+                class="bg-blue-950 text-white px-2 py-1.5 rounded-md cursor-pointer hover:bg-blue-800">
                 Publish
             </button>
         </form>

@@ -7,7 +7,7 @@ pub fn NotFoundPage() -> impl IntoView {
             <h1 class="text-3xl sm:text-4xl font-bold">Not Found</h1>
             <p class="text-lg sm:text-xl">The page you are looking for does not exist.</p>
             <a href="/"
-                class="px-8 py-2 border text-base font-semibold rounded-md hover:bg-slate-50">
+                class="px-8 py-2 border border-gray-200 text-base font-semibold rounded-md hover:bg-slate-50">
                 Go back
             </a>
         </section>

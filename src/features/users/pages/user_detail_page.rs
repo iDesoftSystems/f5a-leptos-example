@@ -25,7 +25,7 @@ pub fn UserDetailPage() -> impl IntoView {
 
             <button
                 on:click=on_go_to_create_post
-                class="bg-blue-950 text-white px-2 py-1.5 rounded-md hover:bg-blue-800">
+                class="bg-blue-950 text-white px-2 py-1.5 rounded-md cursor-pointer hover:bg-blue-800">
                 Create post
             </button>
         </div>
